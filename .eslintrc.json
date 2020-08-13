@@ -1,0 +1,50 @@
+{
+  "ignorePatterns": ["out/**/*"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "overrides": [
+    {
+      "files": ["./**/*"],
+      "excludedFiles": ["next.config.js", "scripts/*"],
+      "extends": [
+        "prettier",
+        "plugin:react/recommended",
+        "plugin:compat/recommended",
+        "plugin:json/recommended"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "rules": {
+        "react/react-in-jsx-scope": "off",
+        "react/prop-types": "off"
+      },
+      "plugins": ["react", "@typescript-eslint"]
+    },
+    {
+      "extends": ["prettier"],
+      "files": ["next.config.js", "scripts/*"],
+      "env": {
+        "node": true,
+        "es6": true
+      },
+      "plugins": []
+    }
+  ]
+}

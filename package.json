@@ -1,0 +1,66 @@
+{
+  "name": "components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node scripts/build.js && next",
+    "build": "echo Bulding application && npm run check && node scripts/build.js && next build",
+    "analyse": "ANALYSE=true npm run build",
+    "export": "echo Exporting static application && next export",
+    "start": "next start",
+    "type-check": "echo Checking types && tsc --noemit",
+    "lint": "echo Linting && eslint . --ext .js,.jsx,.ts,.tsx,.json --no-error-on-unmatched-pattern --format pretty",
+    "report": "rm -rf reports && mkdir reports && i=0; while IFS= read -r line || [ -n \"$line\" ]; do (( count++ )); lighthouse \"$line\"  --html --view --output-path=reports/$count.html --chrome-flags=\"--no-sandbox --headless --disable-gpu\"; done <.report-urls",
+    "check": "npm run type-check && npm run lint"
+  },
+  "author": "",
+  "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run check"
+    }
+  },
+  "dependencies": {
+    "@emotion/core": "^10.0.28",
+    "@emotion/styled": "^10.0.27",
+    "@types/fs-extra": "^9.0.1",
+    "@types/gtag.js": "0.0.3",
+    "@types/lodash": "^4.14.159",
+    "@types/node": "^13.13.12",
+    "@types/react": "^16.9.36",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-formatter-pretty": "^3.0.1",
+    "eslint-plugin-compat": "^3.7.0",
+    "eslint-plugin-json": "^2.1.1",
+    "eslint-plugin-react": "^7.20.0",
+    "lighthouse": "^6.2.0",
+    "lodash": "^4.17.19",
+    "next": "^9.4.4",
+    "next-compose-plugins": "^2.2.0",
+    "next-manifest": "^3.0.1",
+    "next-offline": "^5.0.2",
+    "p-map": "^3.0.0",
+    "prettier": "^1.19.1",
+    "query-string": "^6.13.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-fuzzy": "^1.0.0",
+    "react-fuzzy-highlighter": "^0.3.1",
+    "typescript": "^3.9.5"
+  },
+  "devDependencies": {
+    "@next/bundle-analyzer": "^9.4.4",
+    "chalk": "^3.0.0",
+    "fs-extra": "^9.0.1",
+    "google-spreadsheet": "^3.0.11",
+    "googleapis": "^58.0.0",
+    "husky": "^4.2.5",
+    "link-check": "^4.5.0",
+    "p-each-series": "^2.1.0"
+  }
+}
