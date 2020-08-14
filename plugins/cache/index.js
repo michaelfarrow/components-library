@@ -1,4 +1,4 @@
-const files = [['./data/info.json', './data/links.json']];
+const files = ['./data/info.json', './data/links.json'];
 
 module.exports = {
   async onPreBuild({ utils }) {
