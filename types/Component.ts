@@ -9,6 +9,7 @@ type Component = {
   quantity: number;
   datasheet?: string;
   datasheetPreview?: string;
+  qr?: string;
   fields: ComponentField[];
 };
 

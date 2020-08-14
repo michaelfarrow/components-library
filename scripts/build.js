@@ -9,8 +9,11 @@ const crypto = require('crypto');
 const download = require('download-file');
 const querystring = require('querystring');
 const Bottleneck = require('bottleneck');
+const klaw = require('klaw');
+const path = require('path');
 
 const FILE_ID = '1oOCwb1pybm2RI6DSiBEv8W0xA06XPEoygVb6PnAuSno';
+const QR_DIR = './public/images/qr';
 
 const doc = new GoogleSpreadsheet(FILE_ID);
 
@@ -136,17 +139,18 @@ async function processSheet(sheet) {
         quantity,
         datasheet,
         datasheetPreview,
+        qr: (datasheet && `/images/qr/${slug}.svg`) || undefined,
         fields,
       });
       row._rawData.forEach((cell) => {
         const driveLink = isDriveLink(cell);
         if (driveLink) {
           if (!id || !id.length) {
-            console.log(`no id for url ${cell}`);
+            console.error(`no id for url ${cell}`);
             process.exit(1);
           }
           if (links[slug]) {
-            console.log(`duplicate id: ${slug}`);
+            console.error(`duplicate id: ${slug}`);
             process.exit(1);
           }
           links[slug] = cell;
@@ -188,7 +192,7 @@ function saveQrCode(id) {
   //   .digest('hex');
   const hash = id;
   return fs
-    .pathExists(`./public/images/qr/${hash}.svg`)
+    .pathExists(`${QR_DIR}/${hash}.svg`)
     .then((exists) => {
       if (exists) return;
       return new Promise((resolve, reject) => {
@@ -197,7 +201,7 @@ function saveQrCode(id) {
           `https://api.qrserver.com/v1/create-qr-code/?format=svg&data=${querystring.escape(
             `https://ds.farrow.io/${id}`
           )}`,
-          { directory: './public/images/qr/', filename: `${hash}.svg` },
+          { directory: `${QR_DIR}/`, filename: `${hash}.svg` },
           function(err) {
             if (err) return reject(err);
             resolve();
@@ -218,6 +222,31 @@ function saveQrCodes() {
   return true;
 }
 
+function cleanupQrCodes() {
+  const basePath = path.resolve(QR_DIR);
+  const svgFiles = Object.keys(links).map((slug) => `${basePath}/${slug}.svg`);
+
+  return new Promise((resolve, reject) => {
+    const files = [];
+
+    klaw(`${QR_DIR}/`, { depthLimit: 0 })
+      .on('data', (file) => {
+        if (file.stats.isFile()) files.push(file.path);
+      })
+      .on('error', (e) => reject(e))
+      .on('end', () => {
+        resolve(files.filter((file) => !svgFiles.includes(file)));
+      });
+  }).then((toRemove) => {
+    return Promise.all(
+      toRemove.map((file) => {
+        console.log(`Removing file: ${file}`);
+        return fs.remove(file);
+      })
+    );
+  });
+}
+
 function go() {
   return drive.files.get({ fileId: FILE_ID }).then((file) => {
     lastModified = file.data.modifiedDate;
@@ -236,6 +265,7 @@ function go() {
         }
         return processSheets()
           .then(saveQrCodes)
+          .then(cleanupQrCodes)
           .then(saveLinks)
           .then(saveInfo);
       });

@@ -27,11 +27,6 @@ export default function ComponentPage(props: ComponentProps) {
     setDsLoaded(true);
   };
 
-  const fields =
-    (component.fields &&
-      component.fields.filter((field) => field.value && field.value.length)) ||
-    [];
-
   return (
     <div>
       <Head>
@@ -56,6 +51,7 @@ export default function ComponentPage(props: ComponentProps) {
             >
               Datasheet
             </a>
+            {(component.qr && <img src={component.qr} />) || null}
             <div className='component__datasheet-preview-wrapper'>
               <div className='component__datasheet-preview'>
                 <div
