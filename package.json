@@ -55,7 +55,9 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "^9.4.4",
+    "bottleneck": "^2.19.5",
     "chalk": "^3.0.0",
+    "download-file": "^0.1.5",
     "fs-extra": "^9.0.1",
     "google-spreadsheet": "^3.0.11",
     "googleapis": "^58.0.0",

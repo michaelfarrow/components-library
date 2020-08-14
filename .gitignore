@@ -2,6 +2,7 @@
 /.netlify
 /reports
 /public/manifest.json
+/public/images/qr
 /data
 
 # General

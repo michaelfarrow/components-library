@@ -5,11 +5,19 @@ const { google } = require('googleapis');
 const pEachSeries = require('p-each-series');
 const fs = require('fs-extra');
 const slugify = require('../util/slugify');
-const { last } = require('lodash');
+const crypto = require('crypto');
+const download = require('download-file');
+const querystring = require('querystring');
+const Bottleneck = require('bottleneck');
 
 const FILE_ID = '1oOCwb1pybm2RI6DSiBEv8W0xA06XPEoygVb6PnAuSno';
 
 const doc = new GoogleSpreadsheet(FILE_ID);
+
+const limiter = new Bottleneck({
+  maxConcurrent: 1,
+  minTime: 2000,
+});
 
 const credentials = {
   client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -156,7 +164,9 @@ async function processSheet(sheet) {
 }
 
 function processSheets() {
-  return pEachSeries(doc.sheetsByIndex, processSheet);
+  return pEachSeries(doc.sheetsByIndex, (sheet) => {
+    return limiter.schedule(() => processSheet(sheet));
+  });
 }
 
 function saveLinks() {
@@ -169,6 +179,43 @@ function saveInfo() {
     { lastModified, categories: componentCats },
     { spaces: 2 }
   );
+}
+
+function saveQrCode(id) {
+  // const hash = crypto
+  //   .createHash('sha1')
+  //   .update(url, 'utf-8')
+  //   .digest('hex');
+  const hash = id;
+  return fs
+    .pathExists(`./public/images/qr/${hash}.svg`)
+    .then((exists) => {
+      if (exists) return;
+      return new Promise((resolve, reject) => {
+        console.log(`downloading QR code for: ${id}`);
+        download(
+          `https://api.qrserver.com/v1/create-qr-code/?format=svg&data=${querystring.escape(
+            `https://ds.farrow.io/${id}`
+          )}`,
+          { directory: './public/images/qr/', filename: `${hash}.svg` },
+          function(err) {
+            if (err) return reject(err);
+            resolve();
+          }
+        );
+      });
+    })
+    .then(() => {
+      return { id };
+    });
+}
+
+function saveQrCodes() {
+  if (process.env.GENERATE_QR_CODES !== 'false') {
+    console.log('Saving QR codes');
+    return pEachSeries(Object.keys(links), saveQrCode);
+  }
+  return true;
 }
 
 function go() {
@@ -188,6 +235,7 @@ function go() {
           return Promise.resolve();
         }
         return processSheets()
+          .then(saveQrCodes)
           .then(saveLinks)
           .then(saveInfo);
       });
@@ -196,4 +244,8 @@ function go() {
 
 auth()
   .then(loadInfo)
-  .then(go);
+  .then(go)
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
