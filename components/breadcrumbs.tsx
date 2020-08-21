@@ -55,7 +55,7 @@ export default styled(
     color: #bbb;
   }
 
-  li:first-child::before {
+  li:first-of-type::before {
     display: none;
   }
 `;

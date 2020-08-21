@@ -15,10 +15,10 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      ":root/*": ["./*"],
       ":types/*": ["./types/*"],
       ":components/*": ["./components/*"],
-      ":util/*": ["./util/*"]
+      ":util/*": ["./util/*"],
+      ":root/*": ["./*"]
     }
   },
   "exclude": ["node_modules"],

@@ -3,6 +3,7 @@ import { getData } from ':util/data';
 import Link from 'next/link';
 import Category from ':types/Category';
 import Breadcrumbs from ':components/breadcrumbs';
+import Layout from ':components/layout';
 
 type HomeProps = {
   categories: Pick<Category, 'slug' | 'title'>[];
@@ -10,7 +11,7 @@ type HomeProps = {
 
 export default function Home(props: HomeProps) {
   return (
-    <div>
+    <Layout>
       <Breadcrumbs />
       <ul>
         {props.categories.map((cat, i) => (
@@ -21,7 +22,7 @@ export default function Home(props: HomeProps) {
           </li>
         ))}
       </ul>
-    </div>
+    </Layout>
   );
 }
 

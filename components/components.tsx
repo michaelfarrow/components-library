@@ -2,6 +2,7 @@ import component, { styled, ComponentProps } from ':components/component';
 import Category from ':types/Category';
 import Link from 'next/link';
 import ComponentFieldValue from ':components/component-field-value';
+import { LabelButton } from ':components/labels';
 
 interface Props extends ComponentProps {
   category: Category;
@@ -41,12 +42,19 @@ function createTable(category: Category) {
                 <tr key={i}>
                   <td>
                     {(id && (
-                      <Link
-                        href='/c/[category]/[component]'
-                        as={`/c/${category.slug}/${slug}`}
-                      >
-                        <a>{id}</a>
-                      </Link>
+                      <>
+                        <LabelButton
+                          category={category}
+                          group={group}
+                          component={component}
+                        />{' '}
+                        <Link
+                          href='/c/[category]/[component]'
+                          as={`/c/${category.slug}/${slug}`}
+                        >
+                          <a>{id}</a>
+                        </Link>
+                      </>
                     )) ||
                       null}
                   </td>
@@ -114,7 +122,7 @@ export default styled(
       }
     }
 
-    tbody tr:nth-child(2n) td {
+    tbody tr:nth-of-type(2n) td {
       background-color: #efefef;
     }
   }

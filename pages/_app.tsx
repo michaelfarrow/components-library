@@ -1,9 +1,9 @@
-import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
 import config from ':root/config.json';
 import Router from 'next/router';
 import * as gtag from ':util/analytics';
+import { LabelsProvider } from ':components/labels';
 
 import '../styles.css';
 
@@ -17,10 +17,12 @@ class MyApp extends App {
         <Head>
           <title>{config.site.title}</title>
         </Head>
-        <Component
-          {...pageProps}
-          key={router.asPath || router.pathname || router.route}
-        />
+        <LabelsProvider>
+          <Component
+            {...pageProps}
+            key={router.asPath || router.pathname || router.route}
+          />
+        </LabelsProvider>
         <style jsx global>{`
           body {
             padding: 1em;

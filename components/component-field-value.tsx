@@ -8,6 +8,7 @@ interface Props extends ComponentProps {
 function renderField(field: ComponentField) {
   switch (field.label.trim().toLowerCase()) {
     case 'rs components code':
+    case 'rs code':
       if (field.value && field.value.trim().length) {
         return (
           <a

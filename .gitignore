@@ -4,6 +4,7 @@
 /public/manifest.json
 /public/images/qr
 /data
+/indesign/data
 
 # General
 .DS_Store

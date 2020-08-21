@@ -5,6 +5,7 @@ import Components from ':components/components';
 import Breadcrumbs from ':components/breadcrumbs';
 import Search from ':components/search';
 import Head from 'next/head';
+import Layout from ':components/layout';
 
 type CategoryProps = {
   category: Category;
@@ -17,15 +18,15 @@ type CategoryParams = {
 export default function CategoryPage(props: CategoryProps) {
   const { category } = props;
   return (
-    <div>
-      <h1>Category: {category.title}</h1>
+    <Layout>
+      <h2>Category: {category.title}</h2>
       <Head>
         <title>{category.title}</title>
       </Head>
       <Search categories={[category]} />
       <Breadcrumbs category={category} />
       <Components category={category} />
-    </div>
+    </Layout>
   );
 }
 

@@ -7,6 +7,8 @@ import Component from ':types/Component';
 import Breadcrumbs from ':components/breadcrumbs';
 import ComponentFields from ':components/component-fields';
 import Head from 'next/head';
+import Layout from ':components/layout';
+import { LabelsContext } from ':components/labels';
 
 type ComponentProps = {
   category: Category;
@@ -28,16 +30,16 @@ export default function ComponentPage(props: ComponentProps) {
   };
 
   return (
-    <div>
+    <Layout>
       <Head>
         <title>
           {component.id} | {category.title}
         </title>
       </Head>
-      <h1>
+      <h2>
         Component: {component.id}{' '}
         <span className='component__quantity'>{component.quantity}</span>
-      </h1>
+      </h2>
       <Breadcrumbs category={category} component={component} />
       <section>
         <ComponentFields fields={component.fields} />
@@ -70,7 +72,7 @@ export default function ComponentPage(props: ComponentProps) {
         )) ||
           null}
       </section>
-    </div>
+    </Layout>
   );
 }
 

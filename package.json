@@ -39,7 +39,6 @@
     "eslint-plugin-json": "^2.1.1",
     "eslint-plugin-react": "^7.20.0",
     "lighthouse": "^6.2.0",
-    "lodash": "^4.17.19",
     "next": "^9.4.4",
     "next-compose-plugins": "^2.2.0",
     "next-manifest": "^3.0.1",
@@ -51,6 +50,7 @@
     "react-dom": "^16.13.1",
     "react-fuzzy": "^1.0.0",
     "react-fuzzy-highlighter": "^0.3.1",
+    "react-no-ssr": "^1.1.0",
     "typescript": "^3.9.5"
   },
   "devDependencies": {
@@ -58,12 +58,17 @@
     "bottleneck": "^2.19.5",
     "chalk": "^3.0.0",
     "download-file": "^0.1.5",
+    "encoding": "^0.1.13",
     "fs-extra": "^9.0.1",
     "google-spreadsheet": "^3.0.11",
     "googleapis": "^58.0.0",
+    "hex-rgb": "^4.1.0",
     "husky": "^4.2.5",
     "klaw": "^3.0.0",
     "link-check": "^4.5.0",
-    "p-each-series": "^2.1.0"
+    "lodash": "^4.17.20",
+    "p-each-series": "^2.1.0",
+    "rgb-hex": "^3.0.0",
+    "sharp": "^0.25.4"
   }
 }
