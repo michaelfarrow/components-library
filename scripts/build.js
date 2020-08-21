@@ -15,6 +15,7 @@ const rgbHex = require('rgb-hex');
 const hexRgb = require('hex-rgb');
 const _ = require('lodash');
 const sharp = require('sharp');
+const shortHash = require('short-hash');
 
 const FILE_ID = '1oOCwb1pybm2RI6DSiBEv8W0xA06XPEoygVb6PnAuSno';
 const QR_DIR = './public/images/qr';
@@ -139,6 +140,7 @@ async function processSheet(sheet) {
       }
     } else if (filledCells.length > 1) {
       const slug = slugify(id);
+      const hash = id && String(id).length ? shortHash(String(id)) : undefined;
       let quantity = 0;
       let name = undefined;
       let description = undefined;
@@ -248,6 +250,7 @@ async function processSheet(sheet) {
       groups[groups.length - 1].components.push({
         id,
         slug,
+        hash,
         name: componentName,
         description,
         fieldDescription: fields
@@ -264,7 +267,7 @@ async function processSheet(sheet) {
         labelSize,
         datasheet,
         datasheetPreview,
-        qr: (datasheet && `/images/qr/${slug}.png`) || undefined,
+        qr: (datasheet && `/images/qr/${hash}.png`) || undefined,
         fields,
       });
       row._rawData.forEach((cell) => {
@@ -274,12 +277,12 @@ async function processSheet(sheet) {
             console.error(`no id for url ${cell}`);
             process.exit(1);
           }
-          if (links[slug]) {
-            console.error(`duplicate id: ${slug}`);
+          if (links[hash]) {
+            console.error(`duplicate hash: ${hash} for id: ${id}`);
             process.exit(1);
           }
-          links[slug] = cell;
-          console.log(`${slug} - ${cell}`);
+          links[hash] = cell;
+          console.log(`${hash}, ${id} - ${cell}`);
         }
       });
     }
